@@ -1,20 +1,16 @@
 package com.itau.appjwtvalidator.domain.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.itau.appjwtvalidator.domain.entity.Claim;
 import com.itau.appjwtvalidator.domain.service.validator.ClaimValidator;
 import com.itau.appjwtvalidator.domain.service.validator.NameValidator;
 import com.itau.appjwtvalidator.domain.service.validator.RoleValidator;
 import com.itau.appjwtvalidator.domain.service.validator.SeedValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
-import org.springframework.boot.json.GsonJsonParser;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Base64;
-import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtValidatorService {
 
     private final ClaimValidator claimValidator;
@@ -31,15 +27,28 @@ public class JwtValidatorService {
         var decoder = Base64.getUrlDecoder();
         var decodeBody = new String(decoder.decode(splitToken[1]));
 
+        log.info("--Claim Validation--");
         var claim = this.claimValidator.validate(decodeBody);
 
         if(claim == null){
+            log.info("Claim: " + null);
             return false;
         }
+        log.info("Claim: " + claim);
 
+        log.info(String.valueOf("Claim: "+ claim != null));
+
+        log.info("--Name Validation--");
         var isValidName = this.nameValidator.validate(claim);
+        log.info("Name: "+ isValidName);
+
+        log.info("--Role Validation--");
         var isValidRole = this.roleValidator.validate(claim);
+        log.info("Role: "+ isValidRole);
+
+        log.info("--Seed Validation--");
         var isValidSeed = this.seedValidator.validate(claim);
+        log.info("Seed: "+ isValidSeed);
 
         return (isValidName && isValidSeed && isValidRole);
     }

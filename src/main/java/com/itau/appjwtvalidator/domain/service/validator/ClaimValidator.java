@@ -10,6 +10,9 @@ public class ClaimValidator {
     }
 
     private Claim getClaim(String decodeBody){
+        if(!decodeBody.matches("[\u2666]")){
+            return null;
+        }
         if(decodeBody.split(",").length > 3){
             return null;
         }

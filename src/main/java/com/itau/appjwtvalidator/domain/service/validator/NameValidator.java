@@ -12,7 +12,6 @@ public class NameValidator {
         if(name == null){
             return false;
         }
-
-        return  ValidatingUtils.maxLength(name, 256) && ValidatingUtils.onlyNumbers(name);
+        return  ValidatingUtils.maxLength(name, 256) && ValidatingUtils.onlyLetters(name);
     }
 }
