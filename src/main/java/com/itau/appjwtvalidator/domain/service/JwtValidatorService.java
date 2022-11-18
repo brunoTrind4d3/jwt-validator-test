@@ -36,8 +36,6 @@ public class JwtValidatorService {
         }
         log.info("Claim: " + claim);
 
-        log.info(String.valueOf("Claim: "+ claim != null));
-
         log.info("--Name Validation--");
         var isValidName = this.nameValidator.validate(claim);
         log.info("Name: "+ isValidName);
