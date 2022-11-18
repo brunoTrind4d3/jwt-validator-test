@@ -10,15 +10,17 @@ public class ClaimValidator {
     }
 
     private Claim getClaim(String decodeBody){
-        if(!decodeBody.matches("[\u2666]")){
-            return null;
-        }
+
         if(decodeBody.split(",").length > 3){
             return null;
         }
-        var gsonBuilder = new GsonBuilder();
-        var gson = gsonBuilder.create();
-        return gson.fromJson(decodeBody, Claim.class);
+        try{
+            var gsonBuilder = new GsonBuilder();
+            var gson = gsonBuilder.create();
+            return gson.fromJson(decodeBody, Claim.class);
+        }catch (Exception ex){
+            return null;
+        }
     }
 
 }
