@@ -1,11 +1,17 @@
 package com.itau.appjwtvalidator.domain.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.itau.appjwtvalidator.domain.entity.Claim;
 import com.itau.appjwtvalidator.domain.service.validator.ClaimValidator;
 import com.itau.appjwtvalidator.domain.service.validator.NameValidator;
 import com.itau.appjwtvalidator.domain.service.validator.RoleValidator;
 import com.itau.appjwtvalidator.domain.service.validator.SeedValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.boot.json.GsonJsonParser;
+
+import java.util.Base64;
 
 @RequiredArgsConstructor
 public class JwtValidatorService {
@@ -17,9 +23,14 @@ public class JwtValidatorService {
 
     public boolean validate(String jwt) {
 
+        var splitToken = jwt.split("\\.");
+        if(splitToken.length != 3){
+            return false;
+        }
+        var decoder = Base64.getUrlDecoder();
+        var decodeBody = new String(decoder.decode(splitToken[1]));
 
-
-        var isValidClaim = this.claimValidator.validate(jwt);
+        var isValidClaim = this.claimValidator.validate(decodeBody);
         var isValidName = this.nameValidator.validate(jwt);
         var isValidRole = this.roleValidator.validate(jwt);
         var isValidSeed = this.seedValidator.validate(jwt);

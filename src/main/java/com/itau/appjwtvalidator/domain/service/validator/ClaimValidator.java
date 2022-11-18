@@ -1,25 +1,21 @@
 package com.itau.appjwtvalidator.domain.service.validator;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.google.gson.GsonBuilder;
+import com.itau.appjwtvalidator.domain.entity.Claim;
 
 public class ClaimValidator {
 
-    public boolean validate(String jwt){
-        var allClaims = getAllClaimsFromToken(jwt);
-        System.out.println(allClaims.getAudience());
-        return  false;
+    public Claim validate(String jwtBody){
+        return this.getClaim(jwtBody);
     }
 
-    private Claims getAllClaimsFromToken(String token) {
-        Claims claims;
-        try {
-            claims = Jwts.parser()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            claims = null;
+    private Claim getClaim(String decodeBody){
+        if(decodeBody.split(",").length > 3){
+            return null;
         }
-        return claims;
+        var gsonBuilder = new GsonBuilder();
+        var gson = gsonBuilder.create();
+        return gson.fromJson(decodeBody, Claim.class);
     }
+
 }
