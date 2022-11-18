@@ -9,7 +9,14 @@ public class ValidatingUtils {
         if (value == null) {
             return false;
         }
-        return value.matches("[0-9]+");
+        return value.matches("\\d");
+    }
+
+    public static boolean onlyLetters(String value) {
+        if (value == null) {
+            return false;
+        }
+        return value.matches("[a-zA-Z]+");
     }
 
     public static boolean maxLength(String value, Integer maxLength) {

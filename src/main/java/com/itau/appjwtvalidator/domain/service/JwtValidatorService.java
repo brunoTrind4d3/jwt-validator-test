@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2Res
 import org.springframework.boot.json.GsonJsonParser;
 
 import java.util.Base64;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtValidatorService {
@@ -30,11 +31,16 @@ public class JwtValidatorService {
         var decoder = Base64.getUrlDecoder();
         var decodeBody = new String(decoder.decode(splitToken[1]));
 
-        var isValidClaim = this.claimValidator.validate(decodeBody);
-        var isValidName = this.nameValidator.validate(jwt);
-        var isValidRole = this.roleValidator.validate(jwt);
-        var isValidSeed = this.seedValidator.validate(jwt);
+        var claim = this.claimValidator.validate(decodeBody);
 
-        return (isValidClaim && isValidName && isValidSeed && isValidRole);
+        if(claim == null){
+            return false;
+        }
+
+        var isValidName = this.nameValidator.validate(claim);
+        var isValidRole = this.roleValidator.validate(claim);
+        var isValidSeed = this.seedValidator.validate(claim);
+
+        return (isValidName && isValidSeed && isValidRole);
     }
 }
